@@ -6,7 +6,7 @@
 
 using namespace std;
 
-#include "WorldObject.h"
+#include "Models/Physics/WorldObject.h"
 
 
 WorldObject *mario;
@@ -31,7 +31,7 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 }
 
 void init() {
-    mario = new WorldObject((Point){0.0,0.0}, (Dimension){1.0,1.0}, "mario.png");
+    mario = new WorldObject((Point){0.0,0.0}, (Dimension){1.0,1.0}, "ImageResources/mario.png");
 }
 
 
