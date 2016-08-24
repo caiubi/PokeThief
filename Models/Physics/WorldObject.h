@@ -1,6 +1,6 @@
 typedef struct{
 	double x, y;
-}Point;
+}Point, Vector2D;
 
 typedef struct{
 	double width, height;
@@ -36,6 +36,7 @@ public:
 	Point getPosition();
 	Dimension getSize();
 	GLuint getTexture();
+	void applySpeed(Vector2D);
 };
 
 WorldObject::WorldObject(){
@@ -107,4 +108,10 @@ GLuint WorldObject::getTexture(){
 
 Dimension WorldObject::getSize(){
 	return this->size;
+}
+
+void WorldObject::applySpeed(Vector2D vec){
+	this->center.x += vec.x;
+	this->center.y += vec.y;
+//	cout << "{" << center.x << ", " << center.y << "}" << endl;
 }

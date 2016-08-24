@@ -6,12 +6,16 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	if (key == GLFW_KEY_T && action == GLFW_PRESS)
+		throwP = true;
+
 }
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	Point p = scalePix((Point){xpos, ypos}, screenBounds, spaceBounds);
-	mario->setPosition(p);
+//	mario->setPosition(p);
 }
 
 GLFWwindow *windowSetup(string title, Bounds screenBounds){
@@ -38,18 +42,18 @@ GLFWwindow *windowSetup(string title, Bounds screenBounds){
 	return window;
 }
 
-void updateWindowConstraints(GLFWwindow *window, Bounds spaceBounds){
+void updateWindowConstraints(GLFWwindow *window, Bounds *spaceBounds){
 	float ratio;
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
 	ratio = width / (float) height;
-	spaceBounds.left = -ratio;
-	spaceBounds.right = ratio;
+	spaceBounds->left = -ratio;
+	spaceBounds->right = ratio;
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(spaceBounds.left, spaceBounds.right, spaceBounds.bottom, spaceBounds.top, 1.f, -1.f);
+	glOrtho(spaceBounds->left, spaceBounds->right, spaceBounds->bottom, spaceBounds->top, 1.f, -1.f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
