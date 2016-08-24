@@ -7,31 +7,19 @@
 using namespace std;
 
 #include "Models/Physics/WorldObject.h"
+#include "Models/Characters/Character.h"
 
 
-WorldObject *mario;
+Character *mario;
 
-Bounds screenBounds = {0, 400, 0, 400};
+Bounds screenBounds = {0, 960, 0, 540};
 Bounds spaceBounds = {-1, 1, 1, -1};
 
-static void error_callback(int error, const char* description)
-{
-    cout << description << endl;
-}
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
-static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-    Point p = scalePix((Point){xpos, ypos}, screenBounds, spaceBounds);
-    mario->setPosition(p);
-}
+#include "Utils/WindowManager.h"
 
 void init() {
-    mario = new WorldObject((Point){0.0,0.0}, (Dimension){1.0,1.0}, "ImageResources/mario.png");
+    WorldObject corpo = WorldObject((Point){0.0,0.0}, (Dimension){0.5,0.5}, "ImageResources/mario.png");
+    mario = new Character(1, 10, 5, TRAINER, corpo);
 }
 
 
@@ -42,49 +30,19 @@ void draw(){
 
 int main(void)
 {
-    GLFWwindow* window;
-    glfwSetErrorCallback(error_callback);
-    if (!glfwInit())
-        exit(EXIT_FAILURE);
-
-    window = glfwCreateWindow(400, 400, "PokeThief", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        exit(EXIT_FAILURE);
-    }
-    
-    glfwMakeContextCurrent(window);
+    GLFWwindow* window = windowSetup("PokeThief", screenBounds);
     init();
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetCursorPosCallback(window, cursor_position_callback);
-    glClearColor(1, 1, 1, 0);
-    
-    float ratio;
-    int width, height;
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
     while (!glfwWindowShouldClose(window)){
 
-        glfwGetFramebufferSize(window, &width, &height);
-        ratio = width / (float) height;
-        glViewport(0, 0, width, height);
-        glClear(GL_COLOR_BUFFER_BIT);
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
+        updateWindowConstraints(window, spaceBounds);
 
         draw();
+//    cout << "aqui" << endl;
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-    glDisable(GL_BLEND);
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    exit(EXIT_SUCCESS);
+
+    destroyAndExit(window);
 }
 

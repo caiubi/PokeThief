@@ -7,12 +7,13 @@ BIN = Main
 DELETER = rm -f
 
 linux:
-	$(CC) -c $(FILES) 2> "errors.txt"
+	$(CC) -c $(FILES) 
 	$(CC) $(OBJS) -o $(BIN) $(LINUX_LINKER_FLAGS)
 	./$(BIN)
 mac:
 	$(CC) -c $(FILES) 2> "errors.txt"
 	$(CC) $(OBJS) -o $(BIN) $(MAC_LINKER_FLAGS)
+	cat errors.txt
 	./$(BIN)
 clean:
 	$(DELETER) $(OBJS) $(BIN)

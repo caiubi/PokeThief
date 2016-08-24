@@ -1,20 +1,50 @@
-enum CharacterType{};
 
-class Character extends WorldObject{
-	private:
-		int state;
-		double hpMax, hpCurrent;
-		CharacterType type;
+enum CharacterType{TRAINER, POKEMON};
 
-	protected:
-		void changeState(int);
-	public:
-		Character(int, double, double, CharacterType);
+class Character: public WorldObject{
+private:
+	int state;
+	double hpMax, hpCurrent;
+	CharacterType type;
 
-		double getMaxHP();
-		double getCurrentHP();
+protected:
+	void changeState(int);
 
-		void setCurrentHP(double);
+public:
+	Character(int, double, double, CharacterType, WorldObject);
 
-		void getCharacterType();
+	double getMaxHP();
+	double getCurrentHP();
+
+	void setCurrentHP(double);
+
+	CharacterType getCharacterType();
+};
+
+
+void Character::changeState(int state){
+	this->state = state;
+}
+
+Character::Character(int state, double hpMax, double hpCurrent, CharacterType type, WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture()){
+	this->state = state;
+	this->hpMax = hpMax;
+	this->hpCurrent = hpCurrent;
+	this->type = type;
+}
+
+double Character::getMaxHP(){
+	return this->hpMax;
+}
+
+double Character::getCurrentHP(){
+	return this->hpCurrent;
+}
+
+void Character::setCurrentHP(double hpCurrent){
+	this->hpCurrent = hpCurrent;
+}
+
+CharacterType Character::getCharacterType(){
+	return type;
 }
