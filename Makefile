@@ -6,14 +6,13 @@ OBJS = *.o
 BIN = Main
 DELETER = rm -f
 
+mac:
+	$(CC) -c $(FILES)
+	$(CC) $(OBJS) -o $(BIN) $(MAC_LINKER_FLAGS)
+	./$(BIN)
 linux:
 	$(CC) -c $(FILES) 
 	$(CC) $(OBJS) -o $(BIN) $(LINUX_LINKER_FLAGS)
-	./$(BIN)
-mac:
-	$(CC) -c $(FILES) 2> "errors.txt"
-	$(CC) $(OBJS) -o $(BIN) $(MAC_LINKER_FLAGS)
-	cat errors.txt
 	./$(BIN)
 clean:
 	$(DELETER) $(OBJS) $(BIN)

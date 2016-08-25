@@ -49,6 +49,7 @@ void updateWindowConstraints(GLFWwindow *window, Bounds *spaceBounds){
 	ratio = width / (float) height;
 	spaceBounds->left = -ratio;
 	spaceBounds->right = ratio;
+
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
@@ -56,7 +57,7 @@ void updateWindowConstraints(GLFWwindow *window, Bounds *spaceBounds){
 	glOrtho(spaceBounds->left, spaceBounds->right, spaceBounds->bottom, spaceBounds->top, 1.f, -1.f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
+ 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 }
 
 void destroyAndExit(GLFWwindow *window){

@@ -1,7 +1,10 @@
-class Pokeball extends WorldObject{
+class Pokeball: public WorldObject{
 		private:
 			bool opened;
-			double speedVector[2];
 		public:
-			Pokeball(bool, double speedVector[2]);
+			Pokeball(bool, WorldObject);
 };
+
+Pokeball::Pokeball(bool opened, WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture(), body.getSpeed()){
+	this->opened = opened;
+}

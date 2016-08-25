@@ -26,7 +26,7 @@ void Character::changeState(int state){
 	this->state = state;
 }
 
-Character::Character(int state, double hpMax, double hpCurrent, CharacterType type, WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture()){
+Character::Character(int state, double hpMax, double hpCurrent, CharacterType type, WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture(), body.getSpeed()){
 	this->state = state;
 	this->hpMax = hpMax;
 	this->hpCurrent = hpCurrent;

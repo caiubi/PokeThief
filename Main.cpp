@@ -9,9 +9,11 @@ using namespace std;
 
 #include "Models/Physics/WorldObject.h"
 #include "Models/Characters/Character.h"
+#include "Models/Item/Pokeball.h"
+#include "Models/Characters/Trainer.h"
 
-
-Character *mario;
+Pokeball *ball = NULL;
+Trainer *trainer;
 
 Bounds screenBounds = {0, 960, 0, 540};
 Bounds spaceBounds = {-1, 1, 1, -1};
@@ -21,13 +23,13 @@ bool throwP = false;
 #include "Utils/WindowManager.h"
 
 void init() {
-    WorldObject corpo = WorldObject((Point){-1.0,0.0}, (Dimension){0.2,0.2}, "ImageResources/pokeball.png");
-    mario = new Character(1, 10, 5, TRAINER, corpo);
+    WorldObject corpo = WorldObject((Point){1.0,0.09}, (Dimension){0.4444,0.481482}, "ImageResources/trainer.png", (Vector2D){0,0});
+    trainer = new Trainer(2, corpo);
+    ball = trainer->throwPokeball();
+
 }
 
-
 void draw(){
-    mario->draw();
 
     glColor3d(0,0,0);
     glBegin(GL_POLYGON);
@@ -43,13 +45,11 @@ void draw(){
 int main(void)
 {
     GLFWwindow* window = windowSetup("PokeThief", screenBounds);
+    
+    
     double currentFrame, deltaTime, lastFrame, t = 0;
-    Vector2D speedConst = (Vector2D){2, 1};
-    Vector2D speed;
-    double g = 1;
-    double theta = M_PI/3.0;
-
-//    cout << "ListPlot[{" << endl;
+    Vector2D speedConst = (Vector2D){-0.7, 1.5};
+    Vector2D speed = speedConst;
     init();
     lastFrame = currentFrame = glfwGetTime();
 
@@ -61,21 +61,24 @@ int main(void)
 
         updateWindowConstraints(window, &spaceBounds);
 
-//        cout << deltaTime << endl;
-//        cout << t << endl;
         if(throwP){
-            speed.x = speedConst.x * cos(theta) * deltaTime;
-            speed.y = (speedConst.y * sin(theta) - g*t)* deltaTime;
-
-            t+= deltaTime;
-
-            if(mario->getPosition().y >= 0)
-                mario->applySpeed(speed);
-            else{
-                throwP = false;
+            if(ball->isInRest()){
+                ball->setSpeed(speedConst);
+            }else if(ball->getPosition().y <= 0){
+                speed.x /=1.5;
+                speed.y /=1.5;
+                if(speed.x > 0.0005 && speed.y > 0.0005){
+                    ball->setSpeed(speed);
+                }else{
+                    speed.x = speedConst.x;
+                    speed.y = speedConst.y;
+                }
             }
             
         }
+        trainer->drawAndUpdate(deltaTime);
+        if(ball != NULL)
+            ball->drawAndUpdate(deltaTime);
         draw();
 
         glfwSwapBuffers(window);
