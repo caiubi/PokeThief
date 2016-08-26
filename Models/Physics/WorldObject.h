@@ -103,7 +103,7 @@ void WorldObject::drawAndUpdate(double deltaT){
 	update(deltaT);
 }
 
-double WorldObject::gravityForce = 1.0;
+double WorldObject::gravityForce = 2.0;
 
 void WorldObject::update(double deltaT){
 //	cout << "Movimento iniciado" << endl;

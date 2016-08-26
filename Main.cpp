@@ -11,6 +11,9 @@ using namespace std;
 #include "Models/Characters/Character.h"
 #include "Models/Item/Pokeball.h"
 #include "Models/Characters/Trainer.h"
+#include "Utils/PerlinNoise.h"
+#include "Models/Scenarios/Scenario.h"
+
 
 Pokeball *ball = NULL;
 Trainer *trainer;
@@ -20,25 +23,22 @@ Bounds spaceBounds = {-1, 1, 1, -1};
 
 bool throwP = false;
 
+Scenario *scenario;
+
 #include "Utils/WindowManager.h"
 
 void init() {
-    WorldObject corpo = WorldObject((Point){1.0,0.09}, (Dimension){0.4444,0.481482}, "ImageResources/trainer.png", (Vector2D){0,0});
+    WorldObject corpo = WorldObject((Point){1.0,0.09}, (Dimension){0.2222,0.240241}, "ImageResources/trainer.png", (Vector2D){0,0});
     trainer = new Trainer(2, corpo);
     ball = trainer->throwPokeball();
+    scenario = new Scenario(GRASS, screenBounds, spaceBounds);
 
 }
 
-void draw(){
 
-    glColor3d(0,0,0);
-    glBegin(GL_POLYGON);
-    glVertex2d(-1, -0.1);
-    glVertex2d(-1, -0.3);
-    glVertex2d(1, -0.3);
-    glVertex2d(1, -0.1);
-    glEnd();
-    glColor3d(1,1,1);
+
+void draw(){
+    scenario->draw();
 }
 
 
@@ -48,8 +48,9 @@ int main(void)
     
     
     double currentFrame, deltaTime, lastFrame, t = 0;
-    Vector2D speedConst = (Vector2D){-0.7, 1.5};
+    Vector2D speedConst = (Vector2D){-2, 2};
     Vector2D speed = speedConst;
+    updateWindowConstraints(window, &spaceBounds);
     init();
     lastFrame = currentFrame = glfwGetTime();
 
