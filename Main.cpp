@@ -28,16 +28,20 @@ Scenario *scenario;
 #include "Utils/WindowManager.h"
 
 void init() {
-    WorldObject corpo = WorldObject((Point){1.0,0.09}, (Dimension){0.2222,0.240241}, "ImageResources/trainer.png", (Vector2D){0,0});
+    Point p;
+    scenario = new Scenario(GRASS, screenBounds, spaceBounds);
+    p = scenario->getFloorHeightAt(2*(screenBounds.right/3));
+    p.y += (0.240241/2.0)+0.05;
+    WorldObject corpo = WorldObject(p, (Dimension){0.2222,0.240241}, "ImageResources/trainer.png", (Vector2D){0,0});
     trainer = new Trainer(2, corpo);
     ball = trainer->throwPokeball();
-    scenario = new Scenario(GRASS, screenBounds, spaceBounds);
 
 }
 
 
 
 void draw(){
+    
     scenario->draw();
 }
 
@@ -77,10 +81,10 @@ int main(void)
             }
             
         }
+        draw();
         trainer->drawAndUpdate(deltaTime);
         if(ball != NULL)
             ball->drawAndUpdate(deltaTime);
-        draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

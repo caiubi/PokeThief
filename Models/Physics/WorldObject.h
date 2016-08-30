@@ -91,7 +91,7 @@ void WorldObject::drawAndUpdate(double deltaT){
 	if(texture != -1){
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texture);
- 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+// 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
  		glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0, 0); glVertex3f(coords[0][0], coords[1][0],  0);
 			glTexCoord2f(0, 1); glVertex3f(coords[0][1], coords[1][1],  0);
