@@ -162,7 +162,6 @@ Vector2D WorldObject::getSpeed(){
 }
 
 void WorldObject::setSpeed(Vector2D speed){
-	cout << "Movimento iniciado" << endl;
 	time = 0;
 	this->speed = speed;
 }

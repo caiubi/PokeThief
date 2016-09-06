@@ -1,8 +1,8 @@
 enum PokemonID{};
 
-class Pokemon extends Character{
+class Pokemon: public Character{
 	private:
 		PokemonID id;
-	public:
-		Attack *performAttack();
-}
+//	public:
+//		Attack *performAttack();
+};

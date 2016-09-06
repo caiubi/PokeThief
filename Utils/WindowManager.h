@@ -9,14 +9,17 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 		throwP = true;
+}
 
-	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+void pollKeyboard(GLFWwindow *window){
+	int action = glfwGetKey(window, GLFW_KEY_UP);
+	int action2 = glfwGetKey(window, GLFW_KEY_DOWN);
+
+	if (action == GLFW_PRESS)
 		theta += M_PI/90;
 
-	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+	if (action2 == GLFW_PRESS)
 		theta -= M_PI/90;
-
-
 }
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -42,6 +45,9 @@ GLFWwindow *windowSetup(string title, Bounds screenBounds){
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
+
+	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
+
 	glClearColor(1, 1, 1, 0);
 
 	glEnable(GL_BLEND);
