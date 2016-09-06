@@ -10,6 +10,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == GLFW_KEY_T && action == GLFW_PRESS)
 		throwP = true;
 
+	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+		theta += M_PI/90;
+
+	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+		theta -= M_PI/90;
+
+
 }
 
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)

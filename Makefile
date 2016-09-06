@@ -5,14 +5,22 @@ MAC_LINKER_FLAGS = -framework OpenGl -lglfw3 -lSOIL -framework CoreFoundation
 OBJS = *.o
 BIN = Main
 DELETER = rm -f
+OS := $(shell uname)
 
-linux:
-	$(CC) -c $(FILES) 
-	$(CC) $(OBJS) -o $(BIN) $(LINUX_LINKER_FLAGS)
-	./$(BIN)
+run:
+ifeq ($(OS),Darwin)
+	$(MAKE) mac
+else
+	$(MAKE) linux
+endif
+
 mac:
 	$(CC) -c $(FILES)
 	$(CC) $(OBJS) -o $(BIN) $(MAC_LINKER_FLAGS)
+	./$(BIN)
+linux:
+	$(CC) -c $(FILES) 
+	$(CC) $(OBJS) -o $(BIN) $(LINUX_LINKER_FLAGS)
 	./$(BIN)
 clean:
 	$(DELETER) $(OBJS) $(BIN)

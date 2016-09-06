@@ -10,11 +10,21 @@ typedef struct{
 	double left, right, top, bottom;
 }Bounds;
 
-Point scalePix(Point pix, Bounds windowScale, Bounds spaceScale){
-	Point sp;
-	sp.x = (((pix.x+windowScale.left)/(windowScale.right - windowScale.left))*(spaceScale.right - spaceScale.left)) + spaceScale.left;
-	sp.y = -(((pix.y+windowScale.top)/(windowScale.bottom - windowScale.top))*(spaceScale.top - spaceScale.bottom)) - spaceScale.bottom;
-	return sp;
+Point scalePix(Point pix, Bounds scaleA, Bounds scaleB){
+	Point pctA, scaledPix;
+	double wA = scaleA.right - scaleA.left;
+	double wB = scaleB.right - scaleB.left;
+	double hA = scaleA.top - scaleA.bottom;
+	double hB = scaleB.top - scaleB.bottom;
+
+	pctA.x = (pix.x - scaleA.left)/wA;
+	pctA.y = (pix.y - scaleA.bottom)/hA;
+
+
+	scaledPix.x = (pctA.x*(wB))+scaleB.left;
+	scaledPix.y = (pctA.y*(hB))+scaleB.bottom;
+
+	return scaledPix;
 }
 
 
@@ -47,6 +57,9 @@ public:
 	GLuint getTexture();
 	Vector2D getSpeed();
 	bool isInRest();
+
+	bool collidesWith(WorldObject*);
+	bool collidesWith(Point);
 };
 
 WorldObject::WorldObject(){
@@ -91,7 +104,7 @@ void WorldObject::drawAndUpdate(double deltaT){
 	if(texture != -1){
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texture);
-// 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
  		glBegin(GL_TRIANGLE_STRIP);
 			glTexCoord2f(0, 0); glVertex3f(coords[0][0], coords[1][0],  0);
 			glTexCoord2f(0, 1); glVertex3f(coords[0][1], coords[1][1],  0);
@@ -162,3 +175,29 @@ void WorldObject::setRest(){
 bool WorldObject::isInRest(){
 	return (speed.y == 0 && speed.x == 0);
 }
+
+bool WorldObject::collidesWith(WorldObject *obj){
+	Point thisP = this->getPosition(), objP = obj->getPosition();
+	Dimension thisS = this->getSize(), objS = obj->getSize();
+	
+	if (thisP.x < objP.x + objS.width && thisP.x + thisS.width > objP.x &&
+		   thisP.y < objP.y + objS.height && thisS.height + thisP.y > objP.y) {
+		return true;
+	}else{
+		return false;
+	}
+}
+
+bool WorldObject::collidesWith(Point p){
+//	cout << "p[" << p.x << ", " << p.y << "]" <<  endl;
+	Dimension thisS = this->getSize();
+	Point thisP = (Point){this->getPosition().x-(thisS.width/2), this->getPosition().y+(thisS.height/2)};
+//	cout << "thisp[" << thisP.x << ", " << thisP.y << "]" <<  endl;
+
+	if(p.x >= thisP.x && p.x <= thisP.x+thisS.width
+		&& p.y <= thisP.y && p.y >= thisP.y-thisS.height){
+		return true;
+	}
+	return false;
+}
+

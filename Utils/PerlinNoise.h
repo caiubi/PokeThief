@@ -1,6 +1,19 @@
-static int SEED = 0;
+class PerlinNoise{
+    private:
+        int SEED;
+        static const int hash[];
 
-static int hash[] = {208,34,231,213,32,248,233,56,161,78,24,140,71,48,140,254,245,255,247,247,40,
+    public:
+        PerlinNoise(int);
+        int noise2(int,int);
+        float lin_inter(float,float,float);
+        float smooth_inter(float,float,float);
+        float noise2d(float, float);
+        float perlin2d(float, float, float, int);
+};
+
+
+int const PerlinNoise::hash[] = {208,34,231,213,32,248,233,56,161,78,24,140,71,48,140,254,245,255,247,247,40,
                      185,248,251,245,28,124,204,204,76,36,1,107,28,234,163,202,224,245,128,167,204,
                      9,92,217,54,239,174,173,102,193,189,190,121,100,108,167,44,43,77,180,204,8,81,
                      70,223,11,38,24,254,210,210,177,32,81,195,243,125,8,169,112,32,97,53,195,13,
@@ -13,24 +26,28 @@ static int hash[] = {208,34,231,213,32,248,233,56,161,78,24,140,71,48,140,254,24
                      135,176,183,191,253,115,184,21,233,58,129,233,142,39,128,211,118,137,139,255,
                      114,20,218,113,154,27,127,246,250,1,8,198,250,209,92,222,173,21,88,102,219};
 
-int noise2(int x, int y)
-{
-//    cout << SEED << endl;
-    int tmp = hash[abs((y + SEED) % 256)];
-    return hash[(tmp + x) % 256];
+PerlinNoise::PerlinNoise(int SEED){
+    this->SEED = SEED;
 }
 
-float lin_inter(float x, float y, float s)
+int PerlinNoise::noise2(int x, int y)
+{
+//    cout << this->SEED << endl;
+    int tmp = this->hash[abs((y + this->SEED) % 256)];
+    return this->hash[(tmp + x) % 256];
+}
+
+float PerlinNoise::lin_inter(float x, float y, float s)
 {
     return x + s * (y-x);
 }
 
-float smooth_inter(float x, float y, float s)
+float PerlinNoise::smooth_inter(float x, float y, float s)
 {
     return lin_inter(x, y, s * s * (3-2*s));
 }
 
-float noise2d(float x, float y)
+float PerlinNoise::noise2d(float x, float y)
 {
     int x_int = x;
     int y_int = y;
@@ -45,7 +62,7 @@ float noise2d(float x, float y)
     return smooth_inter(low, high, y_frac);
 }
 
-float perlin2d(float x, float y, float freq, int depth)
+float PerlinNoise::perlin2d(float x, float y, float freq, int depth)
 {
     float xa = x*freq;
     float ya = y*freq;
