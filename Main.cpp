@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <SOIL.h>
 #include <string>
+#include <vector>
 #include <cmath>
 
 using namespace std;
@@ -13,6 +14,8 @@ using namespace std;
 #include "Utils/PerlinNoise.h"
 #include "Models/Scenarios/Scenario.h"
 #include "Controllers/Controller.h"
+#include "Utils/PrimaryShapesDraw.h"
+#include "Models/UI/ProgressBar.h"
 #include "Models/Characters/Trainer.h"
 #include "Models/Characters/Pokemon.h"
 #include "Models/Team.h"
@@ -41,11 +44,7 @@ void init() {
 }
 
 void update(){
-/*    if(ball != NULL){
-        if(scenario->collidesWith(ball, screenBounds)){
-            ball->setSpeed((Vector2D){0,0});
-        }
-    }*/
+    
 }
 
 
@@ -82,13 +81,13 @@ int main(void)
         }*/
 //        speedConst = rThetaToVector2D(r, theta);
         draw();
-        battleController->drawMembersAndUpdate(deltaTime, window);
+        battleController->drawMembersAndUpdate(deltaTime);
 
 /*        trainer->drawAndUpdate(deltaTime);
         if(ball != NULL)
             ball->drawAndUpdate(deltaTime);
 */
-        pollKeyboard(window);
+        battleController->processInput(window);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

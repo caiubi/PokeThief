@@ -59,8 +59,10 @@ Point Scenario::getFloorHeightAt(int x){
 }
 
 void Scenario::draw(){
+	glColor3d(1,1,1);
 	background->drawAndUpdate(0);
 	int x;
+
 	glColor3d(1,1,1);
 
 	glEnable(GL_TEXTURE_2D);

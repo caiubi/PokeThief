@@ -45,6 +45,7 @@ public:
 	WorldObject(Point, Dimension, string, Vector2D);
 	WorldObject(Point, Dimension, GLuint, Vector2D);
 	void drawAndUpdate(double);
+	void draw();
 	void update(double);
 
 	void setRest();
@@ -97,10 +98,18 @@ WorldObject::WorldObject(Point p, Dimension d, GLuint texture, Vector2D speed){
 
 void WorldObject::drawAndUpdate(double deltaT){
 //	cout << "[" << center.x << " " << center.y << "] tex:" << this->texture << endl; 
+	draw();
+	update(deltaT);
+}
+
+double WorldObject::gravityForce = 2.0;
+
+void WorldObject::draw(){
 	double coords[2][4] = {
 		{center.x-(size.width/2.0), center.x-(size.width/2.0), center.x+(size.width/2.0), center.x+(size.width/2.0)},
 		{center.y-(size.height/2.0),center.y+(size.height/2.0), center.y-(size.height/2.0), center.y+(size.height/2.0)}
 	};
+	glColor3d(1,1,1);
 	if(texture != -1){
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -113,10 +122,7 @@ void WorldObject::drawAndUpdate(double deltaT){
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
 	}
-	update(deltaT);
 }
-
-double WorldObject::gravityForce = 2.0;
 
 void WorldObject::update(double deltaT){
 //	cout << "Movimento iniciado" << endl;

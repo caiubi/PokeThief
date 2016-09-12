@@ -6,9 +6,10 @@ class Controller{
 		void changeState(int state);
 		int getState();
 
-		void processKeyboardInput();
-		void processMouseInput();
-		void drawMembersAndUpdate(double, GLFWwindow*);
+		void processInput(GLFWwindow*);
+		void processKeyboardInput(GLFWwindow*);
+		void processMouseInput(GLFWwindow*);
+		void drawMembersAndUpdate(double);
 
 };
 

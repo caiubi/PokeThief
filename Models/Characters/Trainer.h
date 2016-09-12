@@ -1,67 +1,156 @@
 class Trainer: public Character{
 private:
 	int nPokeballs;
+	int active;
 	double tPower, theta;
-	Vector2D rThetaToVector2D(double, double);
+	WorldObject *mira;
+	Point throwPosition;
+	Vector2D rThetaToVector2D();
 public:
-	Trainer(int, WorldObject);
+	Trainer(int, int, WorldObject);
 	Pokeball *throwPokeball();
 	void drawAndUpdate(double);
 	void increaseAngle();
 	void decreaseAngle();
-	void incDecForce(bool);
+	void incDecForce();
+	bool isLeftDirection();
+	bool isActive();
+
+	void setLeftDirection(bool);
+	void setActive(int);
+	void clearForce();
+	void updateAimPos();
+
+	double getPercentThrowPower();
+
 };
 
-Trainer::Trainer(int nPokeballs, WorldObject body) : Character(0, 0, 0, TRAINER, body){
+Trainer::Trainer(int nPokeballs, int active, WorldObject body) : Character(0, 0, 0, TRAINER, body){
 	this->nPokeballs = nPokeballs;
-	tPower = 2;
-	theta = -M_PI/4.0;
+	tPower = 3;
+	double dir = (body.getSize().width > 0)?-1:1;
+	theta = dir*M_PI/4.0;
+	this->active = active;
+	Vector2D aimPos = rThetaToVector2D();
+	throwPosition = (Point){this->getPosition().x-0.1,this->getPosition().y+0.1};
+
+	mira = new WorldObject(throwPosition, (Dimension){0.08,0.08}, "ImageResources/cross.png", (Vector2D){0,0});
 }
 
 Pokeball *Trainer::throwPokeball(){
-	if(nPokeballs > 0){
-		Point p = (Point){this->getPosition().x-0.2,this->getPosition().y+0.15};
-		WorldObject corpo = WorldObject(p, (Dimension){0.1,0.1}, "ImageResources/pokeball.png", rThetaToVector2D(tPower,theta));
+	if(nPokeballs > 0 && active){
+//		Point p = (Point){this->getPosition().x-0.2,this->getPosition().y+0.15};
+		WorldObject corpo = WorldObject(throwPosition, (Dimension){0.08,0.08}, "ImageResources/pokeball.png", rThetaToVector2D());
 		return new Pokeball(false, corpo);
 	}
 	return NULL;
 }
 
-Vector2D Trainer::rThetaToVector2D(double r, double theta){
+Vector2D Trainer::rThetaToVector2D(){
 	Vector2D vec;
-	vec.x = sin(theta)*r;
-	vec.y = cos(theta)*r;
+	vec.x = sin(theta)*tPower;
+	vec.y = cos(theta)*tPower;
 
 	return vec;
 }
 
+void Trainer::updateAimPos(){
+	Point aimPos = throwPosition;
+	double tmpPower = tPower;
+	tPower = 3;
+	Vector2D speed = rThetaToVector2D();
+	tPower = tmpPower;
+
+	aimPos.x += speed.x/6.0;
+	aimPos.y += speed.y/6.0;
+
+	mira->setPosition(aimPos);
+}
 
 void Trainer::drawAndUpdate(double deltaT){
 	WorldObject::drawAndUpdate(deltaT);
 
-	Point ballPos = (Point){this->getPosition().x-0.2,this->getPosition().y+0.15};
-	Vector2D speedConst = rThetaToVector2D(tPower,theta);
+	updateAimPos();
 
+//	Point ballPos = throwPosition;
+//	Vector2D speed = rThetaToVector2D();
+
+/*	glColor3d(0,0,0);
 	glBegin(GL_LINES);
 		glVertex2d(ballPos.x, ballPos.y);
-		glVertex2d(ballPos.x + speedConst.x/4, ballPos.y + speedConst.y/4);
-	glEnd();
+		glVertex2d(mira->getPosition().x, mira->getPosition().y);
+	glEnd();*/
+	if(active)
+		mira->drawAndUpdate(deltaT);
 
+}
+
+bool Trainer::isLeftDirection(){
+	return getSize().width > 0;
+}
+
+void Trainer::setLeftDirection(bool left){
+	Dimension d = getSize();
+	if(left){
+		d.width = abs(d.width);
+		theta = -abs(theta);
+	}
+	else{
+		d.width = -abs(d.width);
+		theta = abs(theta);
+	}
+
+	setSize(d);
 }
 
 void Trainer::increaseAngle(){
-	if(theta < M_PI/2.0)
-		theta += M_PI/90.0;
+	if(isLeftDirection()){
+		if(theta+M_PI/90.0 <= 0)
+			theta += M_PI/90.0;
+
+	}else{
+		if(theta-M_PI/90.0 >= 0)
+			theta -= M_PI/90.0;
+
+	}
 }
 
 void Trainer::decreaseAngle(){
-	if(theta > M_PI)
-		theta -= M_PI/90.0;
+	if(isLeftDirection()){
+		if(theta-M_PI/90.0 >= -M_PI/2.0)
+			theta -= M_PI/90.0;
+
+	}else{
+		if(theta+M_PI/90.0 <= M_PI/2.0)
+			theta += M_PI/90.0;
+
+	}
 }
 
-void Trainer::incDecForce(bool increase){
-	if(increase && tPower <= 2)
-		tPower += 0.1;
-	else if(!increase && tPower >= 0)
-		tPower -= 0.1;		
+void Trainer::incDecForce(){
+    if(tPower > 3)
+		tPower = 0;	
+	else if(tPower <= 3){
+		tPower += 0.05;
+	    if(tPower > 3)
+			tPower = 0;	
+	}
+
+}
+
+double Trainer::getPercentThrowPower(){
+//	cout << tPower/3.0 << endl;
+	return tPower/3.0;
+}
+
+void Trainer::clearForce(){
+	tPower = 0;
+}
+
+void Trainer::setActive(int active){
+	this->active = active;
+}
+
+bool Trainer::isActive(){
+	return active;
 }

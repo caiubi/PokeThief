@@ -11,17 +11,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		throwP = true;
 }
 
-void pollKeyboard(GLFWwindow *window){
-	int action = glfwGetKey(window, GLFW_KEY_UP);
-	int action2 = glfwGetKey(window, GLFW_KEY_DOWN);
-
-	if (action == GLFW_PRESS)
-		theta += M_PI/90;
-
-	if (action2 == GLFW_PRESS)
-		theta -= M_PI/90;
-}
-
 static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
 	Point p = scalePix((Point){xpos, ypos}, screenBounds, spaceBounds);
