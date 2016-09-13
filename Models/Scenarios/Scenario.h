@@ -17,6 +17,7 @@ public:
 	Point getFloorHeightAt(int);
 	void draw();
 	bool collidesWith(WorldObject*, Bounds);
+	Dimension getSize();
 };
 
 Scenario::Scenario(TerrainType type, Bounds screenBounds, Bounds spaceBounds){
@@ -121,18 +122,16 @@ bool Scenario::collidesWith(WorldObject *obj, Bounds screenBounds){
 
 	bool collided = false;
 
-//	Dimension pixDim = (Dimension){((obj->getSize().width +1)/2)*screenBounds.width, (1-((obj->getSize().height+1)/2))*spaceBounds.width};//{dimensionAsPoint.x, dimensionAsPoint.y};
-//	pixDim.width = pixDim.width+screenBounds.right;
-
-//	cout << "De: " <<  startX.x << " ate " << endX.x << endl;//"pixDim: " << pixDim.width << endl;
-
-
-
 	for(int x = (int)startX.x; x <= (int)(endX.x) && (x < screenBounds.right); x++){
 
-		collided |= obj->collidesWith(terrain[x]);
+		collided |= obj->collidesWith(terrain[x]) | (terrain[x].y > obj->getPosition().y);
+		if(collided)
+			break;
 	}
 
-
 	return collided;
+}
+
+Dimension Scenario::getSize(){
+	return (Dimension){spaceBounds.right-spaceBounds.left, spaceBounds.top-spaceBounds.bottom};
 }

@@ -40,8 +40,12 @@ void ProgressBar::drawAndUpdate(double deltaT){
 
 	drawRectangle(p, d, BLACK);
 
+	p.x -= d.width/2.0 - d.width*0.05;
+
 	d.width = d.width*(pct)*0.9;
 	d.height = d.height*0.8;
+
+	p.x += d.width/2.0;
 
 	drawRectangle(p, d, c);
 

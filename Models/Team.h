@@ -24,7 +24,7 @@ Team::Team(Trainer *trainer, PokemonID pID): Controller(0){
     this->pokemon = new Pokemon(pID, 100, 50, 0.111, trainer->getPosition(), trainer->getSize());
 
 	this->active = trainer->isActive();
-	this->bar = new ProgressBar((Point) {trainer->getPosition().x, trainer->getPosition().y-trainer->getSize().height}, (Dimension){0.4, 0.05}, 1);
+	this->bar = new ProgressBar((Point) {trainer->getPosition().x, trainer->getPosition().y- 3*trainer->getSize().height/4}, (Dimension){0.4, 0.05}, 1);
 }
 
 Pokemon *Team::getPokemon(){

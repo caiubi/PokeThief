@@ -5,16 +5,19 @@ class Pokemon: public Character{
 		PokemonID id;
 		Dimension relativeDistance;
 		Point trainerPosition;
+		bool caught;
 		string getPokeImagePath(PokemonID);
 	public:
 		Pokemon(PokemonID, double, double, double, Point, Dimension);
 
 		void setLeftDirection(bool);
+		void setCaught();
+		void drawAndUpdate(double);
 };
 
 Pokemon::Pokemon(PokemonID type, double hpMax, double hpCurrent, double width, Point position, Dimension trainerDim) : Character(0, hpMax, hpCurrent, POKEMON,
 			*(new WorldObject(position, (Dimension){((trainerDim.width > 0)?1:-1)*width, abs(width)}, getPokeImagePath(type), (Vector2D){0,0}))){
-	
+	this->caught = false;
 	this->relativeDistance = trainerDim;
 	this->id = type; 
 	this->trainerPosition = position;
@@ -40,6 +43,12 @@ void Pokemon::setLeftDirection(bool left){
 	setPosition(p);
 }
 
+void Pokemon::drawAndUpdate(double deltaT){
+	if(!this->caught){
+		WorldObject::drawAndUpdate(deltaT);
+	}
+}
+
 string Pokemon::getPokeImagePath(PokemonID id){
 	string path;
 	switch(id){
@@ -54,3 +63,7 @@ string Pokemon::getPokeImagePath(PokemonID id){
 	return path;
 }
 
+
+void Pokemon::setCaught(){
+	this->caught = true;
+}

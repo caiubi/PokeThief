@@ -14,6 +14,10 @@ else
 	$(MAKE) linux
 endif
 
+setup:
+	sh glfw_setup.sh
+	sh soil_setup.sh
+
 mac:
 	$(CC) -c $(FILES)
 	$(CC) $(OBJS) -o $(BIN) $(MAC_LINKER_FLAGS)

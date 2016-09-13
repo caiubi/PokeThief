@@ -17,6 +17,11 @@ static void cursor_position_callback(GLFWwindow* window, double xpos, double ypo
 //	mario->setPosition(p);
 }
 
+void window_size_callback(GLFWwindow* window, int width, int height)
+{
+}
+
+
 GLFWwindow *windowSetup(string title, Bounds screenBounds){
 	GLFWwindow* window;
 
@@ -34,6 +39,7 @@ GLFWwindow *windowSetup(string title, Bounds screenBounds){
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
+	glfwSetWindowSizeCallback(window, window_size_callback);
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
 

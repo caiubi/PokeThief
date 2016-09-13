@@ -7,6 +7,7 @@ class BattleController: public Controller{
 		vector<Pokeball> pokeballs;
 		Bounds screenBounds;
 		int turn;
+		ProgressBar *player1HP, *player2HP;
 	public:
 		BattleController(Bounds, Bounds);
 
@@ -33,14 +34,15 @@ BattleController::BattleController(Bounds screenBounds, Bounds spaceBounds) : Co
     p1.y += (0.240241/2.0)+0.05;
     p2.y += (0.240241/2.0)+0.05;
 
-    WorldObject corpo1 = WorldObject(p1,  (Dimension){0.111,0.240241}, "ImageResources/trainer2.png", (Vector2D){0,0});
+    WorldObject corpo1 = WorldObject(p1,  (Dimension){0.1554,0.33633}, "ImageResources/trainer2.png", (Vector2D){0,0});
     Trainer *trainer1 = new Trainer(2, !turn, corpo1);
 
-    WorldObject corpo2 = WorldObject(p2, (Dimension){-0.111,0.240241}, "ImageResources/trainer2.png", (Vector2D){0,0});
+    WorldObject corpo2 = WorldObject(p2, (Dimension){-0.1554,0.33633}, "ImageResources/trainerGirl.png", (Vector2D){0,0});
     Trainer *trainer2 = new Trainer(2, turn, corpo2);
 
     teams[0] = new Team(trainer1, PIKACHU);
     teams[1] = new Team(trainer2, CHARMANDER);
+
 }
 
 void BattleController::drawMembersAndUpdate(double deltaT){
@@ -56,11 +58,17 @@ void BattleController::drawMembersAndUpdate(double deltaT){
 	            pokeballs[i].setSpeed((Vector2D){0,0});
 	            teams[turn]->setActive(true);
 	            changeTurn();
+	            break;
 	        }
 	        if(pokeballs[i].collidesWith(teams[!turn]->getPokemon())){
-	        	
+
 	    		changeState(CATCHING);
-//	    		cout << "colidiu" << endl;
+	            pokeballs[i].setSpeed((Vector2D){0,0});
+	            teams[!turn]->getPokemon()->setCaught();
+	            teams[turn]->setActive(true);
+	            changeTurn();
+	    		cout << "colidiu" << endl;
+	            break;
 	        }
 	    }
 	}
