@@ -5,7 +5,7 @@ class BattleController: public Controller{
 		vector<Pokeball> pokeballs;
 		Bounds screenBounds;
 		int turn;
-		bool shootingBall;
+		bool charging;
 	public:
 		BattleController(Bounds, Bounds);
 
@@ -21,7 +21,7 @@ class BattleController: public Controller{
 
 BattleController::BattleController(Bounds screenBounds, Bounds spaceBounds) : Controller(0){
 	turn = true;
-	shootingBall = false;
+	charging = false;
 
 	this->screenBounds = screenBounds;
 
@@ -66,16 +66,20 @@ void BattleController::processKeyboardInput(GLFWwindow *window){
 	int action = glfwGetKey(window, GLFW_KEY_SPACE);
 
 	if (action == GLFW_PRESS){
-		if(!shootingBall){
-			teams[turn]->getTrainer()->clearForce();
+		if(!charging){
+			teams[turn]->getTrainer()->clearPower();
+			charging = true;
 		}
-		teams[turn]->getTrainer()->incDecForce();
-		shootingBall = true;
+		teams[turn]->getTrainer()->setPowerOscillation(true);
 	}
-	if (action == GLFW_RELEASE && shootingBall){
-		shootingBall = false;
-		pokeballs.push_back((*teams[turn]->getTrainer()->throwPokeball()));
-		teams[turn]->setActive(false);
+	if (action == GLFW_RELEASE && charging){
+		teams[turn]->getTrainer()->setPowerOscillation(false);
+		charging = false;
+		Pokeball *pokeball = teams[turn]->getTrainer()->throwPokeball();
+		if(pokeball != NULL){
+			pokeballs.push_back(*pokeball);
+			teams[turn]->setActive(false);
+		}
 	}
 }
 

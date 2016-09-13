@@ -2,6 +2,7 @@ class Trainer: public Character{
 private:
 	int nPokeballs;
 	int active;
+	bool canOscillate;
 	double tPower, theta;
 	WorldObject *mira;
 	Point throwPosition;
@@ -12,13 +13,14 @@ public:
 	void drawAndUpdate(double);
 	void increaseAngle();
 	void decreaseAngle();
-	void incDecForce();
+	void oscillatePower(double);
 	bool isLeftDirection();
 	bool isActive();
 
 	void setLeftDirection(bool);
 	void setActive(int);
-	void clearForce();
+	void setPowerOscillation(bool);
+	void clearPower();
 	void updateAimPos();
 
 	double getPercentThrowPower();
@@ -28,6 +30,7 @@ public:
 Trainer::Trainer(int nPokeballs, int active, WorldObject body) : Character(0, 0, 0, TRAINER, body){
 	this->nPokeballs = nPokeballs;
 	tPower = 3;
+	canOscillate = false;
 	double dir = (body.getSize().width > 0)?-1:1;
 	theta = dir*M_PI/4.0;
 	this->active = active;
@@ -83,6 +86,9 @@ void Trainer::drawAndUpdate(double deltaT){
 	if(active)
 		mira->drawAndUpdate(deltaT);
 
+	if(canOscillate)
+		oscillatePower(deltaT);
+
 }
 
 bool Trainer::isLeftDirection(){
@@ -127,15 +133,19 @@ void Trainer::decreaseAngle(){
 	}
 }
 
-void Trainer::incDecForce(){
+void Trainer::oscillatePower(double deltaT){
+//	cout << deltaT << endl;
     if(tPower > 3)
 		tPower = 0;	
 	else if(tPower <= 3){
-		tPower += 0.05;
+		tPower += 2*deltaT;
 	    if(tPower > 3)
 			tPower = 0;	
 	}
+}
 
+void Trainer::setPowerOscillation(bool canOscillate){
+	this->canOscillate = canOscillate;
 }
 
 double Trainer::getPercentThrowPower(){
@@ -143,7 +153,7 @@ double Trainer::getPercentThrowPower(){
 	return tPower/3.0;
 }
 
-void Trainer::clearForce(){
+void Trainer::clearPower(){
 	tPower = 0;
 }
 

@@ -12,6 +12,7 @@ protected:
 
 public:
 	Character(int, double, double, CharacterType, WorldObject);
+	Character();
 
 	double getMaxHP();
 	double getCurrentHP();
@@ -24,6 +25,11 @@ public:
 
 void Character::changeState(int state){
 	this->state = state;
+}
+
+
+Character::Character() : WorldObject(){
+
 }
 
 Character::Character(int state, double hpMax, double hpCurrent, CharacterType type, WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture(), body.getSpeed()){
