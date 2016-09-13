@@ -6,7 +6,7 @@ private:
 	int active;
 
 public:
-	Team(Trainer*, Pokemon*);
+	Team(Trainer*, PokemonID);
 	
 	Pokemon *getPokemon();
 	Trainer *getTrainer();
@@ -18,9 +18,11 @@ public:
 
 };
 
-Team::Team(Trainer *trainer, Pokemon *pokemon): Controller(0){
+Team::Team(Trainer *trainer, PokemonID pID): Controller(0){
+
 	this->trainer = trainer;
-	this->pokemon = pokemon;
+    this->pokemon = new Pokemon(pID, 100, 50, 0.111, trainer->getPosition(), trainer->getSize());
+
 	this->active = trainer->isActive();
 	this->bar = new ProgressBar((Point) {trainer->getPosition().x, trainer->getPosition().y-trainer->getSize().height}, (Dimension){0.4, 0.05}, 1);
 }
@@ -56,12 +58,14 @@ void Team::processKeyboardInput(GLFWwindow *window){
 	if(action3 == GLFW_PRESS){
 		if(trainer->isLeftDirection()){
 			trainer->setLeftDirection(false);
+			pokemon->setLeftDirection(false);
 		}
 	}
 
 	if(action4 == GLFW_PRESS){
 		if(!trainer->isLeftDirection()){
 			trainer->setLeftDirection(true);
+			pokemon->setLeftDirection(true);
 		}
 	}
 

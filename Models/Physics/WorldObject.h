@@ -28,6 +28,11 @@ Point scalePix(Point pix, Bounds scaleA, Bounds scaleB){
 }
 
 
+double getTwoPointDistance(Point a, Point b){
+	return sqrt(pow(b.x-a.x,2) + pow(b.y-a.y,2));
+}
+
+
 class WorldObject{
 private:
 	double time;
@@ -58,6 +63,7 @@ public:
 	GLuint getTexture();
 	Vector2D getSpeed();
 	bool isInRest();
+	bool isLeftDirection();
 
 	bool collidesWith(WorldObject*);
 	bool collidesWith(Point);
@@ -121,7 +127,16 @@ void WorldObject::draw(){
 			glTexCoord2f(1, 1); glVertex3f(coords[0][3], coords[1][3],  0);
 		glEnd();
 		glDisable(GL_TEXTURE_2D);
-	}
+/*
+		glColor3d(1,0,0);
+ 		glBegin(GL_LINE_LOOP);
+			glVertex3f(coords[0][0], coords[1][0],  0);
+			glVertex3f(coords[0][2], coords[1][2],  0);
+			glVertex3f(coords[0][3], coords[1][3],  0);
+			glVertex3f(coords[0][1], coords[1][1],  0);
+		glEnd();
+*/
+		}
 }
 
 void WorldObject::update(double deltaT){
@@ -182,15 +197,17 @@ bool WorldObject::isInRest(){
 }
 
 bool WorldObject::collidesWith(WorldObject *obj){
-	Point thisP = this->getPosition(), objP = obj->getPosition();
+	return getTwoPointDistance(getPosition(), obj->getPosition()) <= getSize().width+obj->getSize().width;
+ //Colisao circulo
+/*	Point thisP = this->getPosition(), objP = obj->getPosition();
 	Dimension thisS = this->getSize(), objS = obj->getSize();
 	
-	if (thisP.x < objP.x + objS.width && thisP.x + thisS.width > objP.x &&
+	if (thisP.x-thisS.width/2.0 >= objP.x + objS.width && thisP.x + thisS.width > objP.x &&
 		   thisP.y < objP.y + objS.height && thisS.height + thisP.y > objP.y) {
 		return true;
 	}else{
 		return false;
-	}
+	}*/
 }
 
 bool WorldObject::collidesWith(Point p){
@@ -204,5 +221,9 @@ bool WorldObject::collidesWith(Point p){
 		return true;
 	}
 	return false;
+}
+
+bool WorldObject::isLeftDirection(){
+	return getSize().width > 0;
 }
 

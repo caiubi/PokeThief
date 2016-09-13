@@ -1,3 +1,5 @@
+enum BattleStates{CHARGING, THROWING, CATCHING, AIMING};
+
 class BattleController: public Controller{
 	private:
 		Team *teams[2];
@@ -5,7 +7,6 @@ class BattleController: public Controller{
 		vector<Pokeball> pokeballs;
 		Bounds screenBounds;
 		int turn;
-		bool charging;
 	public:
 		BattleController(Bounds, Bounds);
 
@@ -21,7 +22,8 @@ class BattleController: public Controller{
 
 BattleController::BattleController(Bounds screenBounds, Bounds spaceBounds) : Controller(0){
 	turn = true;
-	charging = false;
+ 
+ 	changeState(AIMING);
 
 	this->screenBounds = screenBounds;
 
@@ -37,8 +39,8 @@ BattleController::BattleController(Bounds screenBounds, Bounds spaceBounds) : Co
     WorldObject corpo2 = WorldObject(p2, (Dimension){-0.111,0.240241}, "ImageResources/trainer2.png", (Vector2D){0,0});
     Trainer *trainer2 = new Trainer(2, turn, corpo2);
 
-    teams[0] = new Team(trainer1, NULL);
-    teams[1] = new Team(trainer2, NULL);
+    teams[0] = new Team(trainer1, PIKACHU);
+    teams[1] = new Team(trainer2, CHARMANDER);
 }
 
 void BattleController::drawMembersAndUpdate(double deltaT){
@@ -55,6 +57,11 @@ void BattleController::drawMembersAndUpdate(double deltaT){
 	            teams[turn]->setActive(true);
 	            changeTurn();
 	        }
+	        if(pokeballs[i].collidesWith(teams[!turn]->getPokemon())){
+	        	
+	    		changeState(CATCHING);
+//	    		cout << "colidiu" << endl;
+	        }
 	    }
 	}
 }
@@ -66,15 +73,15 @@ void BattleController::processKeyboardInput(GLFWwindow *window){
 	int action = glfwGetKey(window, GLFW_KEY_SPACE);
 
 	if (action == GLFW_PRESS){
-		if(!charging){
+		if(!(getState() == CHARGING)){
 			teams[turn]->getTrainer()->clearPower();
-			charging = true;
+			changeState(CHARGING);
 		}
 		teams[turn]->getTrainer()->setPowerOscillation(true);
 	}
-	if (action == GLFW_RELEASE && charging){
+	if (action == GLFW_RELEASE && (getState() == CHARGING)){
 		teams[turn]->getTrainer()->setPowerOscillation(false);
-		charging = false;
+		changeState(THROWING);
 		Pokeball *pokeball = teams[turn]->getTrainer()->throwPokeball();
 		if(pokeball != NULL){
 			pokeballs.push_back(*pokeball);

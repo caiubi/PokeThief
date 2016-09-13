@@ -14,12 +14,12 @@ public:
 	void increaseAngle();
 	void decreaseAngle();
 	void oscillatePower(double);
-	bool isLeftDirection();
 	bool isActive();
 
 	void setLeftDirection(bool);
 	void setActive(int);
 	void setPowerOscillation(bool);
+
 	void clearPower();
 	void updateAimPos();
 
@@ -89,10 +89,6 @@ void Trainer::drawAndUpdate(double deltaT){
 	if(canOscillate)
 		oscillatePower(deltaT);
 
-}
-
-bool Trainer::isLeftDirection(){
-	return getSize().width > 0;
 }
 
 void Trainer::setLeftDirection(bool left){
