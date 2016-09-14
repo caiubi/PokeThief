@@ -13,6 +13,8 @@ class Pokemon: public Character{
 		void setLeftDirection(bool);
 		void setCaught();
 		void drawAndUpdate(double);
+		PokemonID getPokemonID();
+		bool collidesWith(WorldObject*);
 };
 
 Pokemon::Pokemon(PokemonID type, double hpMax, double hpCurrent, double width, Point position, Dimension trainerDim) : Character(0, hpMax, hpCurrent, POKEMON,
@@ -63,7 +65,21 @@ string Pokemon::getPokeImagePath(PokemonID id){
 	return path;
 }
 
-
 void Pokemon::setCaught(){
 	this->caught = true;
 }
+
+PokemonID Pokemon::getPokemonID(){
+	return this->id;
+}
+
+bool Pokemon::collidesWith(WorldObject* obj){
+	if(!this->caught){
+		return WorldObject::collidesWith(obj);
+	}else{
+		return false;
+	}
+}
+
+
+

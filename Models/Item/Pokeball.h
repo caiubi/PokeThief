@@ -8,6 +8,7 @@ class Pokeball: public WorldObject{
 			void drawAndUpdate(double);
 			void increaseRotation(double);
 			void draw();
+			void clearRotation();
 };
 
 Pokeball::Pokeball(bool opened, WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture(), body.getSpeed()){
@@ -16,7 +17,7 @@ Pokeball::Pokeball(bool opened, WorldObject body) : WorldObject(body.getPosition
 }
 
 void Pokeball::update(double deltaT){
-	if(!isInRest()){
+	if(!isInRest() && getSpeed().x != 0){
 		increaseRotation(deltaT);
 	}
 
@@ -47,4 +48,8 @@ void Pokeball::increaseRotation(double deltaT){
 	if(rotation >= 360){
 		rotation -= 360;
 	}
+}
+
+void Pokeball::clearRotation(){
+	rotation = 0;
 }

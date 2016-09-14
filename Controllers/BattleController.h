@@ -54,20 +54,23 @@ void BattleController::drawMembersAndUpdate(double deltaT){
 	for(int i = 0; i < pokeballs.size(); i++){
 		pokeballs[i].drawAndUpdate(deltaT);
 		if(!pokeballs[i].isInRest()){
+			cout << i ;
 	        if(scenario->collidesWith(&pokeballs[i], screenBounds)){
 	            pokeballs[i].setSpeed((Vector2D){0,0});
 	            teams[turn]->setActive(true);
 	            changeTurn();
 	            break;
 	        }
+	         cout << teams[!turn]->getPokemon()->getPokemonID() << endl;
 	        if(pokeballs[i].collidesWith(teams[!turn]->getPokemon())){
 
 	    		changeState(CATCHING);
-	            pokeballs[i].setSpeed((Vector2D){0,0});
+	            pokeballs[i].setSpeed((Vector2D){0,-1});
+	            pokeballs[i].clearRotation();
+
 	            teams[!turn]->getPokemon()->setCaught();
-	            teams[turn]->setActive(true);
-	            changeTurn();
-	    		cout << "colidiu" << endl;
+//	            teams[turn]->setActive(true);
+//	            changeTurn();
 	            break;
 	        }
 	    }

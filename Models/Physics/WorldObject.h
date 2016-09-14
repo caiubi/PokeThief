@@ -197,7 +197,7 @@ bool WorldObject::isInRest(){
 }
 
 bool WorldObject::collidesWith(WorldObject *obj){
-	return getTwoPointDistance(getPosition(), obj->getPosition()) <= getSize().width+obj->getSize().width;
+	return getTwoPointDistance(getPosition(), obj->getPosition()) <= abs(getSize().width)+abs(obj->getSize().width);
  //Colisao circulo
 /*	Point thisP = this->getPosition(), objP = obj->getPosition();
 	Dimension thisS = this->getSize(), objS = obj->getSize();
@@ -213,6 +213,7 @@ bool WorldObject::collidesWith(WorldObject *obj){
 bool WorldObject::collidesWith(Point p){
 //	cout << "p[" << p.x << ", " << p.y << "]" <<  endl;
 	Dimension thisS = this->getSize();
+	thisS.width = abs(thisS.width);
 	Point thisP = (Point){this->getPosition().x-(thisS.width/2), this->getPosition().y+(thisS.height/2)};
 //	cout << "thisp[" << thisP.x << ", " << thisP.y << "]" <<  endl;
 
