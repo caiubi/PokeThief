@@ -1,4 +1,4 @@
-enum BattleStates{CHARGING, THROWING, CATCHING, AIMING};
+enum BattleStates{CHARGING, THROWING, CATCHING, AIMING, PAUSED};
 
 class BattleController: public Controller{
 	private:
@@ -7,23 +7,28 @@ class BattleController: public Controller{
 		vector<Pokeball> pokeballs;
 		Bounds screenBounds;
 		int turn;
+		int lastState;
+		int pauseCount;
 		ProgressBar *player1HP, *player2HP;
+		WorldObject *pauseScreen;
 	public:
 		BattleController(Bounds, Bounds);
 
 		void start();
 
 		void processKeyboardInput(GLFWwindow*);
-		void processMouseInput(GLFWwindow*);
+		int processMouseInput(GLFWwindow*);
 		void processInput(GLFWwindow*);
 		void changeTurn();
 		void drawMembersAndUpdate(double);
+		void update(double);
 
 };
 
 BattleController::BattleController(Bounds screenBounds, Bounds spaceBounds) : Controller(0){
 	turn = true;
- 
+ 	lastState = -1;
+ 	pauseCount = 0;
  	changeState(AIMING);
 
 	this->screenBounds = screenBounds;
@@ -46,9 +51,14 @@ BattleController::BattleController(Bounds screenBounds, Bounds spaceBounds) : Co
 	this->player1HP = new ProgressBar((Point) {spaceBounds.right/2.0, spaceBounds.top*0.8}, (Dimension){spaceBounds.right*0.8, 0.08}, 1);
 	this->player2HP = new ProgressBar((Point) {spaceBounds.left/2.0, spaceBounds.top*0.8}, (Dimension){spaceBounds.right*0.8, 0.08}, 1);
 
+	pauseScreen = new WorldObject((Point){0,0}, (Dimension){(spaceBounds.right-spaceBounds.left), spaceBounds.top - spaceBounds.bottom}, "ImageResources/PauseBG.png", (Vector2D){0,0});
+
 }
 
 void BattleController::drawMembersAndUpdate(double deltaT){
+	if(getState() == PAUSED){
+		deltaT = 0;
+	}
     scenario->draw();
 	teams[0]->drawMembersAndUpdate(deltaT);
 	teams[1]->drawMembersAndUpdate(deltaT);
@@ -58,7 +68,16 @@ void BattleController::drawMembersAndUpdate(double deltaT){
 
 	this->player1HP->drawAndUpdate(deltaT);
 	this->player2HP->drawAndUpdate(deltaT);
-//	teamRight->drawMembers(deltaT);
+
+	update(deltaT);
+
+	if(getState() == PAUSED)
+		this->pauseScreen->drawAndUpdate(deltaT);
+
+}
+
+
+void BattleController::update(double deltaT){
 
 	for(int i = 0; i < pokeballs.size(); i++){
 		pokeballs[i].drawAndUpdate(deltaT);
@@ -85,32 +104,49 @@ void BattleController::drawMembersAndUpdate(double deltaT){
 	}
 }
 
+
 void BattleController::processKeyboardInput(GLFWwindow *window){
-	teams[turn]->processKeyboardInput(window);
-
-
-	int action = glfwGetKey(window, GLFW_KEY_SPACE);
-
-	if (action == GLFW_PRESS){
-		if(!(getState() == CHARGING)){
-			teams[turn]->getTrainer()->clearPower();
-			changeState(CHARGING);
+	if(glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS){
+		if(getState() == PAUSED && pauseCount > 30){
+			changeState(lastState);
+			pauseCount = 0;
+		}else if(pauseCount > 30){
+			lastState = getState();
+			changeState(PAUSED);
+			pauseCount = 0;
 		}
-		teams[turn]->getTrainer()->setPowerOscillation(true);
 	}
-	if (action == GLFW_RELEASE && (getState() == CHARGING)){
-		teams[turn]->getTrainer()->setPowerOscillation(false);
-		changeState(THROWING);
-		Pokeball *pokeball = teams[turn]->getTrainer()->throwPokeball();
-		if(pokeball != NULL){
-			pokeballs.push_back(*pokeball);
-			teams[turn]->setActive(false);
+	if(pauseCount <= 30){
+		pauseCount++;
+	}
+	if(getState() != PAUSED){
+		teams[turn]->processKeyboardInput(window);
+		int action = glfwGetKey(window, GLFW_KEY_SPACE);
+
+		if (action == GLFW_PRESS){
+			if(!(getState() == CHARGING)){
+				teams[turn]->getTrainer()->clearPower();
+				changeState(CHARGING);
+			}
+			teams[turn]->getTrainer()->setPowerOscillation(true);
 		}
+		if (action == GLFW_RELEASE && (getState() == CHARGING)){
+			teams[turn]->getTrainer()->setPowerOscillation(false);
+			changeState(THROWING);
+			Pokeball *pokeball = teams[turn]->getTrainer()->throwPokeball();
+			if(pokeball != NULL){
+				pokeballs.push_back(*pokeball);
+				teams[turn]->setActive(false);
+			}
+		}
+
+	}else{
+		glfwGetKey(window, GLFW_KEY_SPACE);
 	}
 }
 
-void BattleController::processMouseInput(GLFWwindow* window){
-
+int BattleController::processMouseInput(GLFWwindow* window){
+	return -1;
 }
 
 void BattleController::changeTurn(){

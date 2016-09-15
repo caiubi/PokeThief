@@ -1,3 +1,4 @@
+
 class Controller{
 	protected:
 		int state;
@@ -8,7 +9,7 @@ class Controller{
 
 		void processInput(GLFWwindow*);
 		void processKeyboardInput(GLFWwindow*);
-		void processMouseInput(GLFWwindow*);
+		int processMouseInput(GLFWwindow*);
 		void drawMembersAndUpdate(double);
 
 };
@@ -18,7 +19,8 @@ Controller::Controller(int state){
 }
 
 void Controller::changeState(int state){
-	this->state = state;
+	if(state != -1) 
+		this->state = state;
 }
 
 int Controller::getState(){

@@ -20,7 +20,8 @@ using namespace std;
 #include "Models/Characters/Trainer.h"
 #include "Models/Team.h"
 #include "Controllers/BattleController.h"
-
+#include "Controllers/MenuController.h"
+#include "Controllers/GameController.h"
 
 Pokeball *ball = NULL;
 Trainer *trainer;
@@ -32,15 +33,13 @@ bool throwP = false;
 
 double r = 2, theta = -M_PI/4;
 
-BattleController *battleController;
+GameController *gameController;
 
 
 #include "Utils/WindowManager.h"
 
 void init() {
-    battleController = new BattleController(screenBounds, spaceBounds);
-//    ball = trainer->throwPokeball();
-
+    gameController = new GameController(screenBounds, spaceBounds);
 }
 
 void update(){
@@ -82,13 +81,13 @@ int main(void)
         }*/
 //        speedConst = rThetaToVector2D(r, theta);
         draw();
-        battleController->drawMembersAndUpdate(deltaTime);
+        gameController->drawMembersAndUpdate(deltaTime);
 
 /*        trainer->drawAndUpdate(deltaTime);
         if(ball != NULL)
             ball->drawAndUpdate(deltaTime);
 */
-        battleController->processInput(window);
+        gameController->processInput(window);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
