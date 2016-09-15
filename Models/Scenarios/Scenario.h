@@ -6,7 +6,7 @@ private:
 	TerrainType type;
 	int width, maxY;
 	GLuint terrainTexture;
-	Bounds spaceBounds;
+	Bounds spaceBounds, screenBounds;
 	WorldObject *background;
 	PerlinNoise *terrainGenerator;
 	void generateTerrain(Bounds, Bounds);
@@ -15,15 +15,18 @@ private:
 public:
 	Scenario(TerrainType type, Bounds, Bounds);
 	Point getFloorHeightAt(int);
+	Point getFloorHeightAt(double);
 	void draw();
 	bool collidesWith(WorldObject*, Bounds);
 	Dimension getSize();
+	Bounds getSpaceBounds();
 };
 
 Scenario::Scenario(TerrainType type, Bounds screenBounds, Bounds spaceBounds){
 	this->type = type;
 	this->terrainGenerator = new PerlinNoise((int)(((long)time(NULL))));
 	width = screenBounds.right;
+	this-> screenBounds = screenBounds;
 	this->spaceBounds = spaceBounds;
     this->generateTerrain(screenBounds, spaceBounds);
     background = new WorldObject((Point){0,0}, (Dimension){spaceBounds.left - spaceBounds.right, spaceBounds.top - spaceBounds.bottom}, "ImageResources/bg2.png", (Vector2D){0,0});
@@ -56,6 +59,11 @@ void Scenario::generateTerrain(Bounds screenBounds, Bounds spaceBounds){
 }
 
 Point Scenario::getFloorHeightAt(int x){
+	return terrain[x];
+}
+
+Point Scenario::getFloorHeightAt(double sx){
+	int x = (scalePix((Point){sx, 0}, spaceBounds, screenBounds)).x;
 	return terrain[x];
 }
 
@@ -134,4 +142,8 @@ bool Scenario::collidesWith(WorldObject *obj, Bounds screenBounds){
 
 Dimension Scenario::getSize(){
 	return (Dimension){spaceBounds.right-spaceBounds.left, spaceBounds.top-spaceBounds.bottom};
+}
+
+Bounds Scenario::getSpaceBounds(){
+	return spaceBounds;
 }

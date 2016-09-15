@@ -6,7 +6,7 @@ private:
 	int active;
 
 public:
-	Team(Trainer*, PokemonID);
+	Team(Trainer*, PokemonID, Scenario*);
 	
 	Pokemon *getPokemon();
 	Trainer *getTrainer();
@@ -18,13 +18,13 @@ public:
 
 };
 
-Team::Team(Trainer *trainer, PokemonID pID): Controller(0){
-
+Team::Team(Trainer *trainer, PokemonID pID, Scenario *scenario): Controller(0){
 	this->trainer = trainer;
-    this->pokemon = new Pokemon(pID, 100, 50, 0.111, trainer->getPosition(), trainer->getSize());
+
+    this->pokemon = new Pokemon(pID, 100, 100, 0.111, trainer->getPosition(), trainer->getSize(), scenario);
 
 	this->active = trainer->isActive();
-	this->bar = new ProgressBar((Point) {trainer->getPosition().x, trainer->getPosition().y- 3*trainer->getSize().height/4}, (Dimension){0.4, 0.05}, 1);
+	this->bar = new ProgressBar((Point) {trainer->getPosition().x, trainer->getPosition().y+ 3*trainer->getSize().height/4}, (Dimension){0.4, 0.05}, 1);
 }
 
 Pokemon *Team::getPokemon(){

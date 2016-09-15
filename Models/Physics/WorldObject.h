@@ -51,6 +51,7 @@ public:
 	WorldObject(Point, Dimension, GLuint, Vector2D);
 	void drawAndUpdate(double);
 	void draw();
+	void draw(double,double,double);
 	void update(double);
 
 	void setRest();
@@ -111,11 +112,15 @@ void WorldObject::drawAndUpdate(double deltaT){
 double WorldObject::gravityForce = 2.0;
 
 void WorldObject::draw(){
+	draw(1,1,1);
+}
+
+void WorldObject::draw(double r, double g, double b){
 	double coords[2][4] = {
 		{center.x-(size.width/2.0), center.x-(size.width/2.0), center.x+(size.width/2.0), center.x+(size.width/2.0)},
 		{center.y-(size.height/2.0),center.y+(size.height/2.0), center.y-(size.height/2.0), center.y+(size.height/2.0)}
 	};
-	glColor3d(1,1,1);
+	glColor3d(r,g,b);
 	if(texture != -1){
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texture);

@@ -46,7 +46,7 @@ Pokeball *Trainer::throwPokeball(){
 		WorldObject corpo = WorldObject(throwPosition, (Dimension){0.08,0.08}, "ImageResources/pokeball.png", rThetaToVector2D());
 		if(corpo.isInRest())
 			corpo.setSpeed((Vector2D){0,-1});
-		return new Pokeball(false, corpo);
+		return new Pokeball(corpo);
 	}
 	return NULL;
 }

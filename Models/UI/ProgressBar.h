@@ -31,18 +31,18 @@ void ProgressBar::shiftCharge(double qt){
 void ProgressBar::drawAndUpdate(double deltaT){
 	Point p = getPosition();
 	Dimension d = getSize();
-	Color c = BLUE;
+	Color c = RED;
 
 	if(pct >= 0.25 && pct < 0.6)
 		c = ORANGE;
 	else if(pct > 0.6)
-		c = RED;
+		c = GREEN;
 
 	drawRectangle(p, d, BLACK);
 
-	p.x -= d.width/2.0 - d.width*0.05;
+	p.x -= d.width/2.0 - d.width*0.01;
 
-	d.width = d.width*(pct)*0.9;
+	d.width = d.width*(pct)*0.98;
 	d.height = d.height*0.8;
 
 	p.x += d.width/2.0;

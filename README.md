@@ -1,7 +1,9 @@
 # Trabalho Prático - Computação Gráfica 2016
 
 ## PokeThief
-Esse projeto é um jogo desenvolvido como trabalho prático para a disciplina de Computação Gráfica no CEFET-MG, baseado em outro jogo, o **GORILLAS.BAS** feito em **BASIC**.
+Esse projeto é um jogo desenvolvido em **C++** como trabalho prático para a disciplina de Computação Gráfica no CEFET-MG, baseado em outro jogo, o **GORILLAS.BAS** feito em **BASIC**.
+
+![alt Demo](https://raw.githubusercontent.com/caiubi/PokeThief/master/ImageResources/Demo.png)
 
 ### Instalação e execução
 

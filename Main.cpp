@@ -10,14 +10,14 @@ using namespace std;
 
 #include "Models/Physics/WorldObject.h"
 #include "Models/Characters/Character.h"
-#include "Models/Item/Pokeball.h"
 #include "Utils/PerlinNoise.h"
 #include "Models/Scenarios/Scenario.h"
 #include "Controllers/Controller.h"
 #include "Utils/PrimaryShapesDraw.h"
 #include "Models/UI/ProgressBar.h"
-#include "Models/Characters/Trainer.h"
 #include "Models/Characters/Pokemon.h"
+#include "Models/Item/Pokeball.h"
+#include "Models/Characters/Trainer.h"
 #include "Models/Team.h"
 #include "Controllers/BattleController.h"
 
@@ -56,6 +56,7 @@ void draw(){
 
 int main(void)
 {
+    srand(time(NULL));
     GLFWwindow* window = windowSetup("PokeThief", screenBounds);
     
     

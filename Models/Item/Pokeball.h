@@ -1,24 +1,43 @@
+#define SUCCESS_OSCILLATION 12
+#define MAX_TRIES 20
+
 class Pokeball: public WorldObject{
 		private:
-			bool opened;
+			bool catching, catchSucess;
 			double rotation;
+			int oscilationCount;
+			bool rotOscillationIncreasing;
+			Pokemon *pokemon;
+			bool remover;
+			int maxTries;
 		public:
-			Pokeball(bool, WorldObject);
+			Pokeball(WorldObject);
 			void update(double);
 			void drawAndUpdate(double);
 			void increaseRotation(double);
 			void draw();
 			void clearRotation();
+			void oscillateRotation(double);
+			void setCatching(Pokemon*);
+			bool isSetToRemove();
 };
 
-Pokeball::Pokeball(bool opened, WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture(), body.getSpeed()){
-	this->opened = opened;
+Pokeball::Pokeball(WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture(), body.getSpeed()){
+	this->catching = false;
 	this->rotation = 0;
+	rotOscillationIncreasing = true;
+	catchSucess = false;
+	oscilationCount = 0;
+	pokemon = NULL;
+	remover = false;
+	maxTries = MAX_TRIES;
 }
 
 void Pokeball::update(double deltaT){
 	if(!isInRest() && getSpeed().x != 0){
 		increaseRotation(deltaT);
+	}else if(catching){
+		oscillateRotation(deltaT);
 	}
 
 	WorldObject::update(deltaT);
@@ -36,10 +55,21 @@ void Pokeball::draw(){
 	glRotatef(rotation, 0.f, 0.f, 1.f); //Pra dar um efeito bacana
 	glTranslated(-getPosition().x,-getPosition().y, 0);
 
-	WorldObject::draw();
+	if(catchSucess)
+		WorldObject::draw(1,0,0);
+	else
+		WorldObject::draw();
 	glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
 
+}
+
+void Pokeball::setCatching(Pokemon *pokemon){
+	this->catching = true;
+	this->pokemon = pokemon;
+	this->pokemon->tryToCatch();
+	this->maxTries = this->pokemon->getMaxTries(SUCCESS_OSCILLATION);
+	cout << "Max" << maxTries << endl;
 }
 
 void Pokeball::increaseRotation(double deltaT){
@@ -50,6 +80,35 @@ void Pokeball::increaseRotation(double deltaT){
 	}
 }
 
+void Pokeball::oscillateRotation(double deltaT){
+	if(oscilationCount == maxTries && maxTries != SUCCESS_OSCILLATION){
+		catchSucess = false;
+		catching = false;
+		this->remover = true;
+		pokemon->finishCatch();
+	}
+	if(oscilationCount == SUCCESS_OSCILLATION){
+		catchSucess = true;
+		catching = false;
+		rotation = 0;
+
+	}
+	if(rotOscillationIncreasing){
+		rotation += 300*deltaT;
+	}else{
+		rotation -= 300*deltaT;		
+	}
+	if(rotation > 45 || rotation < -45){
+		rotOscillationIncreasing = !rotOscillationIncreasing;
+		oscilationCount++;
+//		cout << oscilationCount << endl;
+	}
+}
+
 void Pokeball::clearRotation(){
 	rotation = 0;
+}
+
+bool Pokeball::isSetToRemove(){
+	return this->remover;
 }

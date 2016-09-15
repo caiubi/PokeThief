@@ -25,7 +25,7 @@ void setDrawColor(Color c){
 			glColor3d(1,1,1);
 			break;
 		case BLACK:
-			glColor3d(1,1,1);
+			glColor3d(0,0,0);
 			break;
 	}
 }
