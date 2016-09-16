@@ -1,20 +1,18 @@
-enum BattleStates{CHARGING, THROWING, CATCHING, AIMING, PAUSED};
+enum BattleStates{CHARGING, WALKING, THROWING, CATCHING, AIMING, PAUSED, FINISHED};
 
 class BattleController: public Controller{
 	private:
 		Team *teams[2];
 		Scenario *scenario;
 		vector<Pokeball> pokeballs;
-		Bounds screenBounds;
+		Bounds screenBounds, spaceBounds;
 		int turn;
 		int lastState;
 		int pauseCount;
 		ProgressBar *player1HP, *player2HP;
-		WorldObject *pauseScreen;
+		WorldObject *pauseScreen, *gotcha;
 	public:
 		BattleController(Bounds, Bounds);
-
-		void start();
 
 		void processKeyboardInput(GLFWwindow*);
 		int processMouseInput(GLFWwindow*);
@@ -32,6 +30,7 @@ BattleController::BattleController(Bounds screenBounds, Bounds spaceBounds) : Co
  	changeState(AIMING);
 
 	this->screenBounds = screenBounds;
+	this->spaceBounds = spaceBounds;
 
     scenario = new Scenario(GRASS, screenBounds, spaceBounds);
     Point p1 = scenario->getFloorHeightAt((int)(2*(screenBounds.right/3)));
@@ -52,6 +51,7 @@ BattleController::BattleController(Bounds screenBounds, Bounds spaceBounds) : Co
 	this->player2HP = new ProgressBar((Point) {spaceBounds.left/2.0, spaceBounds.top*0.8}, (Dimension){spaceBounds.right*0.8, 0.08}, 1);
 
 	pauseScreen = new WorldObject((Point){0,0}, (Dimension){(spaceBounds.right-spaceBounds.left), spaceBounds.top - spaceBounds.bottom}, "ImageResources/PauseBG.png", (Vector2D){0,0});
+	gotcha = new WorldObject((Point){0,spaceBounds.top*0.5}, (Dimension){3.047*spaceBounds.top/3.0, spaceBounds.top/3.0}, "ImageResources/gotcha.png", (Vector2D){0,0});
 
 }
 
@@ -73,7 +73,8 @@ void BattleController::drawMembersAndUpdate(double deltaT){
 
 	if(getState() == PAUSED)
 		this->pauseScreen->drawAndUpdate(deltaT);
-
+	else if(getState() == FINISHED)
+		this->gotcha->drawAndUpdate(deltaT);
 }
 
 
@@ -82,10 +83,18 @@ void BattleController::update(double deltaT){
 	for(int i = 0; i < pokeballs.size(); i++){
 		pokeballs[i].drawAndUpdate(deltaT);
 		if(!pokeballs[i].isInRest()){
+			if(pokeballs[i].getPosition().x < spaceBounds.left || pokeballs[i].getPosition().x > spaceBounds.right){
+	        	pokeballs.erase(pokeballs.begin()+i);
+	            teams[turn]->setActive(true);
+	            changeTurn();	        	
+	            break;
+			}
 	        if(scenario->collidesWith(&pokeballs[i], screenBounds)){
 	            pokeballs[i].setSpeed((Vector2D){0,0});
-	            teams[turn]->setActive(true);
-	            changeTurn();
+	            if(!pokeballs[i].isCatching()){
+		            teams[turn]->setActive(true);
+		            changeTurn();
+	            }
 	            break;
 	        }
 	        if(pokeballs[i].collidesWith(teams[!turn]->getPokemon()) && !teams[!turn]->getPokemon()->isCaught()){
@@ -100,49 +109,57 @@ void BattleController::update(double deltaT){
 	    }else if(pokeballs[i].isSetToRemove()){
         	pokeballs.erase(pokeballs.begin()+i);
         	i--;
+            teams[turn]->setActive(true);
+            changeTurn();        	
+	    }else if(pokeballs[i].isCatchingSuccess()){
+	    	changeState(FINISHED);
+	    	break;
 	    }
 	}
 }
 
 
 void BattleController::processKeyboardInput(GLFWwindow *window){
-	if(glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS){
-		if(getState() == PAUSED && pauseCount > 30){
-			changeState(lastState);
-			pauseCount = 0;
-		}else if(pauseCount > 30){
-			lastState = getState();
-			changeState(PAUSED);
-			pauseCount = 0;
-		}
-	}
-	if(pauseCount <= 30){
-		pauseCount++;
-	}
-	if(getState() != PAUSED){
-		teams[turn]->processKeyboardInput(window);
-		int action = glfwGetKey(window, GLFW_KEY_SPACE);
-
-		if (action == GLFW_PRESS){
-			if(!(getState() == CHARGING)){
-				teams[turn]->getTrainer()->clearPower();
-				changeState(CHARGING);
-			}
-			teams[turn]->getTrainer()->setPowerOscillation(true);
-		}
-		if (action == GLFW_RELEASE && (getState() == CHARGING)){
-			teams[turn]->getTrainer()->setPowerOscillation(false);
-			changeState(THROWING);
-			Pokeball *pokeball = teams[turn]->getTrainer()->throwPokeball();
-			if(pokeball != NULL){
-				pokeballs.push_back(*pokeball);
-				teams[turn]->setActive(false);
+	if(getState() != FINISHED){
+		if(glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS){
+			if(getState() == PAUSED && pauseCount > 30){
+				changeState(lastState);
+				pauseCount = 0;
+			}else if(pauseCount > 30){
+				lastState = getState();
+				changeState(PAUSED);
+				pauseCount = 0;
 			}
 		}
+		if(pauseCount <= 30){
+			pauseCount++;
+		}
+		if(getState() != PAUSED){
+			teams[turn]->processKeyboardInput(window);
+			int action = glfwGetKey(window, GLFW_KEY_SPACE);
 
-	}else{
-		glfwGetKey(window, GLFW_KEY_SPACE);
+			if (action == GLFW_PRESS){
+				if(!(getState() == CHARGING)){
+					teams[turn]->getTrainer()->clearPower();
+					changeState(CHARGING);
+				}
+				teams[turn]->getTrainer()->setPowerOscillation(true);
+			}
+			if (action == GLFW_RELEASE && (getState() == CHARGING)){
+				teams[turn]->getTrainer()->setPowerOscillation(false);
+				changeState(THROWING);
+				Pokeball *pokeball = teams[turn]->getTrainer()->throwPokeball();
+				if(pokeball != NULL){
+					pokeballs.push_back(*pokeball);
+					teams[turn]->setActive(false);
+				}
+			}
+
+		}else{
+			glfwGetKey(window, GLFW_KEY_SPACE);
+		}		
 	}
+
 }
 
 int BattleController::processMouseInput(GLFWwindow* window){

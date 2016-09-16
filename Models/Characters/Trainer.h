@@ -6,6 +6,7 @@ private:
 	double tPower, theta;
 	WorldObject *mira;
 	Point throwPosition;
+	Point nextPos;
 	Vector2D rThetaToVector2D();
 public:
 	Trainer(int, int, WorldObject);
@@ -21,15 +22,18 @@ public:
 	void setPowerOscillation(bool);
 
 	void clearPower();
-	void updateAimPos();
+	void update(double);
 
 	double getPercentThrowPower();
+
+	void move(double, double);
 
 };
 
 Trainer::Trainer(int nPokeballs, int active, WorldObject body) : Character(0, 0, 0, TRAINER, body){
 	this->nPokeballs = nPokeballs;
 	tPower = 3;
+	nextPos = (Point){0,0};
 	canOscillate = false;
 	double dir = (body.getSize().width > 0)?-1:1;
 	theta = dir*M_PI/4.0;
@@ -59,7 +63,8 @@ Vector2D Trainer::rThetaToVector2D(){
 	return vec;
 }
 
-void Trainer::updateAimPos(){
+void Trainer::update(double deltaT){
+	throwPosition = (Point){this->getPosition().x-0.1,this->getPosition().y+0.1};
 	Point aimPos = throwPosition;
 	double tmpPower = tPower;
 	tPower = 3;
@@ -70,21 +75,20 @@ void Trainer::updateAimPos(){
 	aimPos.y += speed.y/6.0;
 
 	mira->setPosition(aimPos);
+
+	if(nextPos.x != 0){
+		this->center.x += nextPos.x*deltaT;
+		this->center.y =  nextPos.y+(getSize().height/2.0);
+		nextPos.x = 0;
+	}
+
 }
 
 void Trainer::drawAndUpdate(double deltaT){
-	WorldObject::drawAndUpdate(deltaT);
+	WorldObject::draw();
 
-	updateAimPos();
+	update(deltaT);
 
-//	Point ballPos = throwPosition;
-//	Vector2D speed = rThetaToVector2D();
-
-/*	glColor3d(0,0,0);
-	glBegin(GL_LINES);
-		glVertex2d(ballPos.x, ballPos.y);
-		glVertex2d(mira->getPosition().x, mira->getPosition().y);
-	glEnd();*/
 	if(active)
 		mira->drawAndUpdate(deltaT);
 
@@ -161,4 +165,8 @@ void Trainer::setActive(int active){
 
 bool Trainer::isActive(){
 	return active;
+}
+
+void Trainer::move(double shift, double nextY){
+	nextPos = (Point){shift, nextY};
 }

@@ -6,8 +6,10 @@ class Pokemon: public Character{
 		Dimension relativeDistance;
 		Point trainerPosition;
 		bool caught;
+		Point nextPos;
 		string getPokeImagePath(PokemonID);
 		Scenario *scenario;
+
 	public:
 		Pokemon(PokemonID, int, int, double, Point, Dimension, Scenario*);
 
@@ -19,11 +21,13 @@ class Pokemon: public Character{
 		void tryToCatch();
 		int getMaxTries(int);
 		void finishCatch();
+		void move(double, double, Point);
 };
 
 Pokemon::Pokemon(PokemonID type, int hpMax, int hpCurrent, double width, Point position, Dimension trainerDim, Scenario *scenario) : Character(0, hpMax, hpCurrent, POKEMON,
 			*(new WorldObject(position, (Dimension){((trainerDim.width > 0)?1:-1)*width, abs(width)}, getPokeImagePath(type), (Vector2D){0,0}))){
 	this->caught = false;
+	this->nextPos = (Point){0,0};
 	this->relativeDistance = trainerDim;
 	this->id = type; 
 	this->scenario = scenario;
@@ -56,6 +60,13 @@ void Pokemon::setLeftDirection(bool left){
 void Pokemon::drawAndUpdate(double deltaT){
 	if(!this->caught){
 		WorldObject::drawAndUpdate(deltaT);
+	}
+
+	if(nextPos.x != 0){
+		setLeftDirection(isLeftDirection());
+		this->center.x += nextPos.x*deltaT;
+		this->center.y =  nextPos.y+(getSize().height/2.0);
+		nextPos.x = 0;
 	}
 }
 
@@ -98,7 +109,7 @@ int Pokemon::getMaxTries(int triesLim){
 	double hpPct = (double)(hpMax-hpCurrent)/(double)hpMax;
 	double failRate = 1-(rPct*hpPct);
 //	failRate = (failRate < 0)? 0 : ((failRate > 1)? 1 : failRate);
-	cout << "failRate: " << failRate << endl;
+//	cout << "failRate: " << failRate << endl;
 	if(failRate >= 0.7){
 		return floor(triesLim*0.3);
 	}else if(failRate >= 0.5){
@@ -112,13 +123,16 @@ int Pokemon::getMaxTries(int triesLim){
 
 void Pokemon::finishCatch(){
 	this->caught = false;
-	cout << "hpAntes: " << this->hpCurrent << endl;
+//	cout << "hpAntes: " << this->hpCurrent << endl;
 
 	this->hpCurrent -= floor((double)hpMax*0.3);
 	this->hpCurrent = (this->hpCurrent < 0)?0:hpCurrent;
 
-	cout << "hpDepois: " << this->hpCurrent << endl;
+//	cout << "hpDepois: " << this->hpCurrent << endl;
 
 }
 
-
+void Pokemon::move(double shift, double nextY, Point trainerPosition){
+	nextPos = (Point){shift, nextY};
+	this->trainerPosition = trainerPosition;
+}

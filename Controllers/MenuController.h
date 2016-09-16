@@ -1,7 +1,7 @@
 class MenuController : public Controller{
 	private:
 		WorldObject *startButton, *instructionsButton;
-		WorldObject *background;
+		WorldObject *background, *title;
 		Bounds spaceBounds, screenBounds;
 	public:
 		MenuController(Bounds, Bounds);
@@ -14,15 +14,17 @@ class MenuController : public Controller{
 MenuController::MenuController(Bounds spaceBounds, Bounds screenBounds) : Controller(0){
 	this->spaceBounds = spaceBounds;
 	this->screenBounds = screenBounds;
-	background = new WorldObject((Point){0,0}, (Dimension){spaceBounds.right-spaceBounds.left, spaceBounds.top - spaceBounds.bottom}, "ImageResources/sky1.jpg", (Vector2D){0,0});
+	background = new WorldObject((Point){0,0}, (Dimension){spaceBounds.right-spaceBounds.left, spaceBounds.top - spaceBounds.bottom}, "ImageResources/bgwoods.png", (Vector2D){0,0});
 
-	startButton = new WorldObject((Point){0,spaceBounds.top/8.0}, (Dimension){(spaceBounds.right-spaceBounds.left)/3.0, 0.2}, "ImageResources/But2.png", (Vector2D){0,0});
-	instructionsButton = new WorldObject((Point){0,-spaceBounds.top/8.0}, (Dimension){(spaceBounds.right-spaceBounds.left)/3.0, 0.2}, "ImageResources/But1.png", (Vector2D){0,0});
+	title = new WorldObject((Point){0,3*spaceBounds.top/8.0}, (Dimension){1.655, 0.4}, "ImageResources/Title.png", (Vector2D){0,0});
+	startButton = new WorldObject((Point){0,-spaceBounds.top/8.0}, (Dimension){(spaceBounds.right-spaceBounds.left)/3.0, 0.3}, "ImageResources/But2.png", (Vector2D){0,0});
+	instructionsButton = new WorldObject((Point){0,-4*spaceBounds.top/8.0}, (Dimension){(spaceBounds.right-spaceBounds.left)/4.0, 0.3}, "ImageResources/But1.png", (Vector2D){0,0});
 
 }
 
 void MenuController::drawMembersAndUpdate(double deltaT){
 	background->drawAndUpdate(deltaT);
+	title->drawAndUpdate(deltaT);
 	startButton->drawAndUpdate(deltaT);
 	instructionsButton->drawAndUpdate(deltaT);
 }

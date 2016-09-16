@@ -20,6 +20,8 @@ class Pokeball: public WorldObject{
 			void oscillateRotation(double);
 			void setCatching(Pokemon*);
 			bool isSetToRemove();
+			bool isCatching();
+			bool isCatchingSuccess();
 };
 
 Pokeball::Pokeball(WorldObject body) : WorldObject(body.getPosition(), body.getSize(), body.getTexture(), body.getSpeed()){
@@ -69,7 +71,10 @@ void Pokeball::setCatching(Pokemon *pokemon){
 	this->pokemon = pokemon;
 	this->pokemon->tryToCatch();
 	this->maxTries = this->pokemon->getMaxTries(SUCCESS_OSCILLATION);
-	cout << "Max" << maxTries << endl;
+}
+
+bool Pokeball::isCatching(){
+	return catching;
 }
 
 void Pokeball::increaseRotation(double deltaT){
@@ -111,4 +116,8 @@ void Pokeball::clearRotation(){
 
 bool Pokeball::isSetToRemove(){
 	return this->remover;
+}
+
+bool Pokeball::isCatchingSuccess(){
+	return this->catchSucess;
 }

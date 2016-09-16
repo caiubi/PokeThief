@@ -147,3 +147,4 @@ Dimension Scenario::getSize(){
 Bounds Scenario::getSpaceBounds(){
 	return spaceBounds;
 }
+

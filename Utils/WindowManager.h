@@ -2,23 +2,10 @@ static void error_callback(int error, const char* description)
 {
 	cout << description << endl;
 }
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, GL_TRUE);
-
-	if (key == GLFW_KEY_T && action == GLFW_PRESS)
-		throwP = true;
-}
-
-static void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	Point p = scalePix((Point){xpos, ypos}, screenBounds, spaceBounds);
-//	mario->setPosition(p);
-}
 
 void window_size_callback(GLFWwindow* window, int width, int height)
 {
+        updateWindowConstraints(window, &spaceBounds);
 }
 
 
@@ -37,8 +24,7 @@ GLFWwindow *windowSetup(string title, Bounds screenBounds){
 	}
 
 	glfwMakeContextCurrent(window);
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetCursorPosCallback(window, cursor_position_callback);
+
 	glfwSetWindowSizeCallback(window, window_size_callback);
 
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, 1);
