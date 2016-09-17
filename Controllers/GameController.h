@@ -1,3 +1,14 @@
+/*
+*  GameController:   
+*	-Possui um enumerador de estados, cada qual corresponde a uma tela do jogo.
+*	-Essa classe é responsável por gerenciar quais telas serão navegadas pelo usuário durante a execução
+*	do programa.
+*	-Ela apresenta ao usuário um menu com duas opções e também realiza a checagem dos comandos absolutos
+*	de reinicio da partida e finalização do programa. 
+*	-A classe recebe do programa main os parametros necessários para tratar eventos de mouse, teclado e
+*	renderização.
+*/
+
 enum GameState{MENU_SCREEN, BATTLE_SCREEN, PAUSE_SCREEN, RESTART_SCREEN, EXIT_SCREEN};
 
 class GameController: public Controller{

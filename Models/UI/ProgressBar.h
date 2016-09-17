@@ -1,3 +1,10 @@
+/*
+*  ProgressBar:   
+*	-Essa classe representa uma barra de carregamento.
+*	-Dada uma porcentagem pct, a barra pode ser desenhada ou incrementada/decrementada em seus limites.
+*	-Primeiro é desenhado um retângulo ao fundo da barra e depois outra barra menor dentro de tamanho relativo
+*	à porcentagem.
+*/
 class ProgressBar : public WorldObject{
 	private:
 		double pct;

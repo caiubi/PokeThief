@@ -1,3 +1,11 @@
+/*
+*  Trainer:   
+*	-Representa o personagem a ser controlado pelo jogador.
+*	-Essa classe também controla a mira e oscila a energia com que o projétil vai ser atirado.
+*	-Possui também o método move, que altera a posição do jogador relativo ao terreno em que ele 
+*	se encontra.
+*/
+
 class Trainer: public Character{
 private:
 	int nPokeballs;

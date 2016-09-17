@@ -33,5 +33,11 @@ $ cd <diretorio-raiz-pokethief>
 $ make clean
 ```
 
+### Como jogar:
+Utilize as setas **para cima** e **para baixo** para mover a mira do jogador.
+Utilize as setas **esquerda** e **direita** para mover a posição do jogador.
+Com a tecla **space** o jogador pode controlar a intensidade do impulso a ser deferido no projétil.
+A partir de qualquer tela as teclas r ou esq podem ser pressionadas para reiniciar ou finalizar o jogo respectivamente.
+
 #### Em breve:
 * Como instalar as dependências em MacOS

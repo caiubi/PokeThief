@@ -1,3 +1,8 @@
+/*
+	WindowManager:
+	-Esse arquivo representa todas as configurações utilizadas na construção da janela utilizando a biblioteca GLFW
+*/
+
 static void error_callback(int error, const char* description)
 {
 	cout << description << endl;

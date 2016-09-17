@@ -1,3 +1,10 @@
+/*
+*  Scenario:   
+*	-Essa classe é responsavel por representar o cenário no jogo, com seu terreno e dimensionamento.
+*	-Ela também trata as colisões de objetos com o seu solo.
+*	-O terreno é gerado a partir da classe de ruido de perlin.
+*/
+
 enum TerrainType{GRASS, SAND};
 
 class Scenario{

@@ -1,3 +1,8 @@
+/*
+*  MenuController:   
+*	-É exclusivamente responsável pela renderização do menu principal e checagem se algum dos botões foram clicados.
+*/
+
 class MenuController : public Controller{
 	private:
 		WorldObject *startButton, *instructionsButton;

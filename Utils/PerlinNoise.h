@@ -1,3 +1,10 @@
+/*
+*  PerlinNoise:   
+*   -É uma classe que representa uma função matemática bem complexa. Ela tem o objetivo de gerar variações de valores
+*   com uma certa uniformidade, geralmente utilizada para geração de terrenos.
+*   A classe foi construída a partir de recortes de códigos diferentes na internet.
+*/
+
 class PerlinNoise{
     private:
         int SEED;

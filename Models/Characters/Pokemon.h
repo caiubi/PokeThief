@@ -1,3 +1,14 @@
+/*
+*  Pokemon:   
+*	-Essa classe é responsável pelo personagem que sofrerá os ataques deferidos no jogo. 
+*	-Ele possui um objeto que representa sua distância relativa ao seu treinador e faz com que ele
+*	sempre esteja alinhado tanto com o terreno, quando com a posição do treinador.
+*	
+*	-Essa classe também possui um método que gerencia a probabilidade com que um pokemon vai ser capturado.
+*	-A probabilidede aumenta quanto menor for o HP do pokemon, e multiplicado por uma porcentagem gerada 
+*	aleatoriamente em um intervalo.
+*/
+
 enum PokemonID{PIKACHU, CHARMANDER};
 
 class Pokemon: public Character{

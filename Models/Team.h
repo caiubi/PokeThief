@@ -1,3 +1,12 @@
+/*
+*  Team:   
+*	-Essa classe representa o agrupamento entre o pokemon e o jogador, assim como a barra de vida do pokemon.
+*	-Como ela representa a interface de controle entre o usuário e o time, então ela realiza as operações de 
+*	movimentação e mudança de angulo da mira do personagem/time.
+*	-A partir de uma velocidade 0.8 o jogador pode se mover no cenário a partir do processamento da posição nessa
+*	classe.
+*/
+
 class Team : public Controller{
 private:
 	Trainer *trainer;

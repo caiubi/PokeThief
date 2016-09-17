@@ -1,3 +1,14 @@
+/*
+*  WorldObject:   
+*	-Esse arquivo possui toda a parte de física utilizada no mundo e também de conversões espaciais.
+*	-Com as estruturas Point, Vector2D, Dimension e Bounds é possivel dimensionar e operar no mundo.
+*	-Com a função scalePix é possível converter um ponto de um espaço A para B.
+*	-A classe WorldObject representa um objeto retangular no mundo, que pode colidir com outro objeto,
+*	ponto, ou também sofrer influência de um vetor velocidade que altera a sua posição em função do tempo.
+*	-Ela carrega a textura utilizando a biblioteca SOIL e representa a direção do objeto na horizontal com
+*	a variação positiva ou negativa na largura.
+*/
+
 typedef struct{
 	double x, y;
 }Point, Vector2D;

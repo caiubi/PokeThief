@@ -1,3 +1,10 @@
+/*
+*  Main:   
+*   -É responsável pela inicialização do controlador principal do jogo, e pelo loop renderização da biblioteca GLFW
+*   -Inclui o cabeçalho de todas as classes utilizadas para facilitar a utilização dos seus componentes.
+*   -Inicializa as variáveis globais a serem utilizadas como unidades de dimensionamento de tempo e espaço.
+*/
+
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cstdlib>

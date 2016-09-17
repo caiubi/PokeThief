@@ -1,3 +1,10 @@
+/*
+*  Pokeball:   
+*	-Essa classe representa o item Pokeball a ser atirada pelo treinador.
+*	-Ela possui essencialmente uma rotação e pode oscilar se estiver em modo de captura de um pokemon.
+*	-Também é configurada como removida, caso venha a ser destruída em uma falha de captura.
+*/
+
 #define SUCCESS_OSCILLATION 12
 #define MAX_TRIES 20
 

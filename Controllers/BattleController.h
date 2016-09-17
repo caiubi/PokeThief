@@ -1,3 +1,16 @@
+/*
+*  Battle Controller:   
+*	-É o controlador responsavel por gerenciar todos os estados possíveis durante uma partida do jogo. 
+*	-Possui um enumerador dos estados.
+*	-No método construtor, os times são inicializados assim como os objetos correspondentes na tela.
+*	-A dinâmica da partida funciona da seguinte forma: O time 1 sempre começa, e o estado do jogo é 
+*	configurado para AIMING (mirar) se o jogador utiliza o teclado para se mover, então ele muda para o
+*	estado WALKING, e ao carregar a pokebola o estado CHARGING é ativado. Desse modo, o objeto que referencia
+*	o jogador retorna uma nova instância de pokeball à lista de objetos do tipo Pokeball. O turno só é trocado
+*	quando a pokebola atinge o solo, ou quando ela quebra devido ao pokemon fugir da captura.
+*/
+
+
 enum BattleStates{CHARGING, WALKING, THROWING, CATCHING, AIMING, PAUSED, FINISHED};
 
 class BattleController: public Controller{

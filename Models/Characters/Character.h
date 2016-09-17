@@ -1,3 +1,9 @@
+/*
+*  CharacterType:   
+*	-Essa classe possui um enumerador dos tipos de Character. Ele corresponde a um personagem do jogo.
+*	-Inicialmente a ideia era tanto ser possível jogar com o Treinador quanto o pokemon, mas a demanda de
+*	tempo, fez com que apenas o treinador atacasse e o pokemon sofresse os danos. 
+*/
 
 enum CharacterType{TRAINER, POKEMON};
 

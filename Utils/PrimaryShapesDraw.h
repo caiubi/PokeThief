@@ -1,3 +1,9 @@
+/*
+*	PrimariShapesDraw:
+*	-Esse arquivo possui um enumerador responsavel por representar cores diversas no jogo.
+*	-Também possui a função que permite a fácil representação opengl de um retângulo.
+*/
+
 enum Color{RED, GREEN, BLUE, ORANGE, MAGENTA, YELLOW, WHITE, BLACK};
 
 
